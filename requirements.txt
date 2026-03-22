@@ -1,6 +1,5 @@
 # Core LangChain
 langchain
-langchain-google-genai
 langchain-community
 langchain-chroma
 langchain-nvidia-ai-endpoints
@@ -12,9 +11,6 @@ chromadb
 # PDF Loading
 pypdf
 pymupdf          # Better PDF parsing (optional but recommended)
-
-# Google Gemini
-google-generativeai
 
 # API Server
 fastapi

@@ -20,8 +20,7 @@ Returns a dict with:
 
 import os
 from dotenv import load_dotenv
-from langchain_nvidia_ai_endpoints import NVIDIAEmbeddings
-from langchain_google_genai import ChatNVIDIA
+from langchain_nvidia_ai_endpoints import NVIDIAEmbeddings, ChatNVIDIA
 from langchain_chroma import Chroma
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
