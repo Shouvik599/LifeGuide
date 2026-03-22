@@ -21,13 +21,12 @@ Returns a dict with:
 import os
 from dotenv import load_dotenv
 from langchain_nvidia_ai_endpoints import NVIDIAEmbeddings
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_google_genai import ChatNVIDIA
 from langchain_chroma import Chroma
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 load_dotenv()
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 NVIDIA_API_KEY = os.getenv("NVIDIA_API_KEY")
 CHROMA_DB_PATH = os.getenv("CHROMA_DB_PATH", "./chroma_db")
 COLLECTION_NAME = os.getenv("COLLECTION_NAME", "sacred_texts")
@@ -150,11 +149,12 @@ def build_chain():
     embeddings = get_embeddings()
     vector_store = get_vector_store(embeddings)
 
-    llm = ChatGoogleGenerativeAI(
-        model="gemini-2.5-flash-lite",
-        google_api_key=GEMINI_API_KEY,
+    llm = ChatNVIDIA(
+        model="meta/llama-3.3-70b-instruct",
+        api_key=NVIDIA_API_KEY,
         temperature=0.2,
-        max_output_tokens=1500,
+        top_p=0.7,
+        max_output_tokens=2048,
     )
 
     prompt = ChatPromptTemplate.from_messages([
