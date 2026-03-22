@@ -115,19 +115,26 @@ def ask(request: AskRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.get("/", include_in_schema=False)
+async def serve_frontend():
+    """Serves the static frontend HTML file."""
+    frontend_path = "frontend/index.html"
+    if os.path.exists(frontend_path):
+        return FileResponse(frontend_path)
+    return {"message": "Sacred Texts RAG API is live. Visit /docs for Swagger UI."}
 
 # ─── Entry Point ──────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
     import uvicorn
 
+    # HF Spaces uses 7860 by default
     host = os.getenv("HOST", "0.0.0.0")
-    port = int(os.getenv("PORT", "8000"))
+    port = int(os.getenv("PORT", "7860")) 
 
     print(f"\n🕊️  Sacred Texts RAG — API Server")
     print(f"{'─' * 40}")
-    print(f"🌐  Running at : http://localhost:{port}")
-    print(f"📖  Docs at    : http://localhost:{port}/docs")
+    print(f"🌐  Running at : http://{host}:{port}")
     print(f"{'─' * 40}\n")
 
-    uvicorn.run("app:app", host=host, port=port, reload=True)
+    uvicorn.run("app:app", host=host, port=port, reload=False) # reload=False for production
