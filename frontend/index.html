@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sacred Texts — Divine Knowledge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #0d0b07;
+      --surface:     #16130d;
+      --surface-2:   #1e1a11;
+      --border:      #3a2e1a;
+      --gold:        #c9993a;
+      --gold-light:  #e8c170;
+      --gold-pale:   #f5e4b0;
+      --cream:       #f0e6cc;
+      --muted:       #7a6a4a;
+      --gita:        #e07b3b;    /* saffron */
+      --quran:       #3bba85;    /* green */
+      --bible:       #5b8ce0;    /* blue */
+      --granth:      #b07ce0;    /* violet — Sikh royal purple */
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--cream);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 18px;
+      line-height: 1.7;
+      overflow: hidden;
+    }
+
+    /* ── Background texture ───────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(201,153,58,.07) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 90%, rgba(91,140,224,.05) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 50% 50%, rgba(176,124,224,.04) 0%, transparent 60%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Layout ───────────────────────────────────────────────── */
+    .app {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      height: 100vh;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* ── Header ───────────────────────────────────────────────── */
+    header {
+      padding: 28px 0 18px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mandala {
+      font-size: 2rem;
+      letter-spacing: .5rem;
+      color: var(--gold);
+      opacity: .6;
+      margin-bottom: 8px;
+      animation: spin 60s linear infinite;
+      display: inline-block;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    h1 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(1.2rem, 3vw, 1.9rem);
+      font-weight: 400;
+      color: var(--gold-pale);
+      letter-spacing: .12em;
+      text-shadow: 0 0 40px rgba(201,153,58,.3);
+    }
+
+    .subtitle {
+      font-family: 'IM Fell English', serif;
+      font-style: italic;
+      font-size: .95rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .badges {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      font-size: .72rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+    }
+    .badge-gita   { color: var(--gita);   border-color: var(--gita);   background: rgba(224,123,59,.1); }
+    .badge-quran  { color: var(--quran);  border-color: var(--quran);  background: rgba(59,186,133,.1); }
+    .badge-bible  { color: var(--bible);  border-color: var(--bible);  background: rgba(91,140,224,.1); }
+    .badge-granth { color: var(--granth); border-color: var(--granth); background: rgba(176,124,224,.1); }
+
+    /* ── Chat Window ──────────────────────────────────────────── */
+    .chat-window {
+      overflow-y: auto;
+      padding: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+    .chat-window::-webkit-scrollbar { width: 4px; }
+    .chat-window::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    /* ── Welcome State ────────────────────────────────────────── */
+    .welcome {
+      text-align: center;
+      margin: auto;
+      padding: 20px;
+      max-width: 500px;
+    }
+
+    .welcome-icon {
+      font-size: 3.5rem;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 0 20px rgba(201,153,58,.4));
+    }
+
+    .welcome h2 {
+      font-family: 'IM Fell English', serif;
+      font-style: italic;
+      font-size: 1.5rem;
+      color: var(--gold-light);
+      margin-bottom: 10px;
+    }
+
+    .welcome p {
+      font-size: .95rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .suggested-queries {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .suggested-queries button {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--cream);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: .95rem;
+      font-style: italic;
+      cursor: pointer;
+      transition: all .2s;
+      text-align: left;
+    }
+    .suggested-queries button:hover {
+      border-color: var(--gold);
+      color: var(--gold-pale);
+      background: var(--surface-2);
+    }
+
+    /* ── Messages ─────────────────────────────────────────────── */
+    .message {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      animation: fadeUp .4s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .message-user {
+      align-items: flex-end;
+    }
+    .message-assistant {
+      align-items: flex-start;
+    }
+
+    .msg-label {
+      font-size: .7rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+      padding: 0 4px;
+    }
+
+    .msg-bubble {
+      max-width: 92%;
+      padding: 16px 20px;
+      border-radius: 12px;
+      line-height: 1.75;
+    }
+
+    .message-user .msg-bubble {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--cream);
+      font-style: italic;
+      font-size: 1rem;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message-assistant .msg-bubble {
+      background: linear-gradient(135deg, var(--surface) 0%, rgba(30,26,17,.95) 100%);
+      border: 1px solid rgba(201,153,58,.2);
+      color: var(--cream);
+      font-size: 1rem;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(201,153,58,.1);
+    }
+
+    .msg-bubble p { margin-bottom: 1em; }
+    .msg-bubble p:last-child { margin-bottom: 0; }
+    .msg-bubble strong { color: var(--gold-light); font-weight: 600; }
+
+    /* ── Sources Panel ────────────────────────────────────────── */
+    .sources {
+      max-width: 92%;
+      margin-top: 4px;
+    }
+
+    .sources-label {
+      font-size: .72rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sources-label::before, .sources-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .sources-label::before { max-width: 20px; }
+
+    .source-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .source-tag {
+      font-size: .78rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid;
+      font-family: 'Cormorant Garamond', serif;
+      cursor: default;
+      transition: all .2s;
+    }
+    .source-tag:hover { transform: translateY(-1px); filter: brightness(1.2); }
+    .source-gita   { color: var(--gita);   border-color: rgba(224,123,59,.4);  background: rgba(224,123,59,.08); }
+    .source-quran  { color: var(--quran);  border-color: rgba(59,186,133,.4);  background: rgba(59,186,133,.08); }
+    .source-bible  { color: var(--bible);  border-color: rgba(91,140,224,.4);  background: rgba(91,140,224,.08); }
+    .source-granth { color: var(--granth); border-color: rgba(176,124,224,.4); background: rgba(176,124,224,.08); }
+    .source-other  { color: var(--gold-light); border-color: rgba(201,153,58,.4); background: rgba(201,153,58,.08); }
+
+    /* ── Loading ──────────────────────────────────────────────── */
+    .loading {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      border: 1px solid rgba(201,153,58,.15);
+      border-radius: 12px;
+      background: var(--surface);
+      width: fit-content;
+      max-width: 280px;
+    }
+
+    .loading-dots {
+      display: flex;
+      gap: 5px;
+    }
+    .loading-dots span {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: dot-pulse 1.4s ease-in-out infinite;
+    }
+    .loading-dots span:nth-child(2) { animation-delay: .2s; }
+    .loading-dots span:nth-child(3) { animation-delay: .4s; }
+    @keyframes dot-pulse {
+      0%, 80%, 100% { opacity: .2; transform: scale(.8); }
+      40%            { opacity: 1;  transform: scale(1.1); }
+    }
+
+    .loading-text {
+      font-size: .85rem;
+      font-style: italic;
+      color: var(--muted);
+    }
+
+    /* ── Error ────────────────────────────────────────────────── */
+    .error-bubble {
+      background: rgba(180, 60, 60, .1);
+      border: 1px solid rgba(180, 60, 60, .3);
+      color: #e08080;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: .9rem;
+      max-width: 92%;
+    }
+
+    /* ── Input Area ───────────────────────────────────────────── */
+    .input-area {
+      padding: 16px 0 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    textarea {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--cream);
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      resize: none;
+      min-height: 52px;
+      max-height: 140px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    textarea::placeholder { color: var(--muted); font-style: italic; }
+    textarea:focus {
+      border-color: rgba(201,153,58,.5);
+      box-shadow: 0 0 0 3px rgba(201,153,58,.08);
+    }
+
+    .send-btn {
+      width: 52px; height: 52px;
+      border-radius: 12px;
+      border: 1px solid rgba(201,153,58,.4);
+      background: linear-gradient(135deg, rgba(201,153,58,.2), rgba(201,153,58,.05));
+      color: var(--gold);
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: all .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .send-btn:hover:not(:disabled) {
+      background: linear-gradient(135deg, rgba(201,153,58,.35), rgba(201,153,58,.15));
+      border-color: var(--gold);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(201,153,58,.2);
+    }
+    .send-btn:disabled { opacity: .3; cursor: not-allowed; transform: none; }
+
+    .input-hint {
+      font-size: .72rem;
+      color: var(--muted);
+      margin-top: 8px;
+      text-align: center;
+      font-style: italic;
+    }
+
+    /* ── Divider line ─────────────────────────────────────────── */
+    .ornament {
+      text-align: center;
+      color: var(--border);
+      font-size: .8rem;
+      letter-spacing: .4em;
+      margin: 4px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- Header -->
+    <header>
+      <div class="mandala">✦</div>
+      <h1>Life Guide</h1>
+      <p class="subtitle">Wisdom from the Bhagavad Gita, Quran, Bible &amp; Guru Granth Sahib</p>
+      <div class="badges">
+        <span class="badge badge-gita">Bhagavad Gita</span>
+        <span class="badge badge-quran">Quran</span>
+        <span class="badge badge-bible">Bible</span>
+        <span class="badge badge-granth">Guru Granth Sahib</span>
+      </div>
+    </header>
+
+    <!-- Chat Window -->
+    <div class="chat-window" id="chatWindow">
+      <div class="welcome" id="welcomePane">
+        <div class="welcome-icon">🕊️</div>
+        <h2>"Seek, and it shall be given unto you"</h2>
+        <p>Ask any spiritual or philosophical question. Answers are drawn exclusively from the Bhagavad Gita, Quran, Bible, and Guru Granth Sahib.</p>
+        <div class="suggested-queries">
+          <button onclick="askSuggested(this)">What do the scriptures say about forgiveness?</button>
+          <button onclick="askSuggested(this)">How should one face fear and death?</button>
+          <button onclick="askSuggested(this)">What is the purpose of prayer and worship?</button>
+          <button onclick="askSuggested(this)">What is the nature of the soul according to each religion?</button>
+          <button onclick="askSuggested(this)">What do the scriptures teach about humility and selfless service?</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="input-area">
+      <div class="input-row">
+        <textarea
+          id="questionInput"
+          placeholder="Ask a question from the sacred texts…"
+          rows="1"
+          onkeydown="handleKey(event)"
+          oninput="autoResize(this)"
+        ></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendQuestion()" title="Ask (Enter)">
+          ✦
+        </button>
+      </div>
+      <p class="input-hint">Press Enter to ask · Shift+Enter for new line · Answers grounded strictly in the sacred texts</p>
+    </div>
+
+  </div>
+
+  <script>
+    const API_BASE = "http://localhost:8000";
+    let isLoading = false;
+
+    // ── Helpers ────────────────────────────────────────────────
+    function getSourceClass(book) {
+      const b = book.toLowerCase();
+      if (b.includes("gita")) return "source-gita";
+      if (b.includes("quran") || b.includes("koran")) return "source-quran";
+      if (b.includes("bible") || b.includes("testament")) return "source-bible";
+      if (b.includes("granth") || b.includes("guru")) return "source-granth";
+      return "source-other";
+    }
+
+    function hideWelcome() {
+      const w = document.getElementById("welcomePane");
+      if (w) w.remove();
+    }
+
+    function scrollToBottom() {
+      const w = document.getElementById("chatWindow");
+      w.scrollTop = w.scrollHeight;
+    }
+
+    function autoResize(el) {
+      el.style.height = "auto";
+      el.style.height = Math.min(el.scrollHeight, 140) + "px";
+    }
+
+    function formatAnswer(text) {
+      // Convert markdown-ish bold (**text**) to <strong>
+      text = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+      // Wrap paragraphs
+      return text.split(/\n\n+/).filter(p => p.trim()).map(p => `<p>${p.trim()}</p>`).join("");
+    }
+
+    // ── Append message to chat ─────────────────────────────────
+    function appendUserMessage(question) {
+      const w = document.getElementById("chatWindow");
+      const div = document.createElement("div");
+      div.className = "message message-user";
+      div.innerHTML = `
+        <span class="msg-label">You</span>
+        <div class="msg-bubble">${escapeHtml(question)}</div>
+      `;
+      w.appendChild(div);
+      scrollToBottom();
+    }
+
+    function appendLoading() {
+      const w = document.getElementById("chatWindow");
+      const div = document.createElement("div");
+      div.className = "message message-assistant";
+      div.id = "loadingMsg";
+      div.innerHTML = `
+        <span class="msg-label">Sacred Texts</span>
+        <div class="loading">
+          <div class="loading-dots"><span></span><span></span><span></span></div>
+          <span class="loading-text">Consulting the scriptures…</span>
+        </div>
+      `;
+      w.appendChild(div);
+      scrollToBottom();
+      return div;
+    }
+
+    function replaceLoadingWithAnswer(loadingEl, data) {
+      const w = document.getElementById("chatWindow");
+
+      // Build source tags
+      const sourceTags = (data.sources || []).map(s => {
+        const cls = getSourceClass(s.book);
+        return `<span class="source-tag ${cls}" title="Page ${s.page}">📖 ${s.book}</span>`;
+      }).join("");
+
+      const sourcesHtml = sourceTags ? `
+        <div class="sources">
+          <div class="sources-label">References</div>
+          <div class="source-tags">${sourceTags}</div>
+        </div>
+      ` : "";
+
+      loadingEl.innerHTML = `
+        <span class="msg-label">Sacred Texts</span>
+        <div class="msg-bubble">${formatAnswer(data.answer)}</div>
+        ${sourcesHtml}
+      `;
+      scrollToBottom();
+    }
+
+    function replaceLoadingWithError(loadingEl, msg) {
+      loadingEl.innerHTML = `
+        <span class="msg-label">Error</span>
+        <div class="error-bubble">⚠️ ${escapeHtml(msg)}</div>
+      `;
+      scrollToBottom();
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    }
+
+    // ── Send question ──────────────────────────────────────────
+    async function sendQuestion() {
+      if (isLoading) return;
+      const input = document.getElementById("questionInput");
+      const question = input.value.trim();
+      if (!question) return;
+
+      hideWelcome();
+      isLoading = true;
+      document.getElementById("sendBtn").disabled = true;
+      input.value = "";
+      input.style.height = "auto";
+
+      appendUserMessage(question);
+      const loadingEl = appendLoading();
+
+      try {
+        const res = await fetch(`${API_BASE}/ask`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question }),
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ detail: res.statusText }));
+          throw new Error(err.detail || "Server error");
+        }
+
+        const data = await res.json();
+        replaceLoadingWithAnswer(loadingEl, data);
+      } catch (err) {
+        let msg = err.message;
+        if (msg.includes("fetch") || msg.includes("NetworkError") || msg.includes("Failed")) {
+          msg = "Cannot reach the server. Make sure `python app.py` is running on localhost:8000.";
+        }
+        replaceLoadingWithError(loadingEl, msg);
+      } finally {
+        isLoading = false;
+        document.getElementById("sendBtn").disabled = false;
+        input.focus();
+      }
+    }
+
+    function askSuggested(btn) {
+      const input = document.getElementById("questionInput");
+      input.value = btn.textContent;
+      autoResize(input);
+      sendQuestion();
+    }
+
+    function handleKey(e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendQuestion();
+      }
+    }
+  </script>
+</body>
+</html>

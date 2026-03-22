@@ -1,0 +1,26 @@
+# Core LangChain
+langchain
+langchain-google-genai
+langchain-community
+langchain-chroma
+langchain-nvidia-ai-endpoints
+langchain-text-splitters          
+
+# Vector Store
+chromadb
+
+# PDF Loading
+pypdf
+pymupdf          # Better PDF parsing (optional but recommended)
+
+# Google Gemini
+google-generativeai
+
+# API Server
+fastapi
+uvicorn[standard]
+python-multipart
+
+# Utilities
+python-dotenv
+pydantic
