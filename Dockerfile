@@ -11,8 +11,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the application code
 COPY . .
 
-# Run the data ingestion script
-RUN python ingest.py
+# Make the start script executable
+RUN chmod +x start.sh
 
-# Run the application in Hugging Face Space
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7860"]
+# HF Spaces requires port 7860
+# We use the shell script as the entry point
+CMD ["./start.sh"]
