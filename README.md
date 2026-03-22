@@ -40,7 +40,7 @@ pip install -r requirements.txt
 ### 2. Configure Environment
 ```bash
 cp .env.example .env
-# Edit .env and add your GEMINI_API_KEY
+# Edit .env and add your NVIDIA_API_KEY
 ```
 
 ### 3. Add Your PDF Books
@@ -78,7 +78,6 @@ Open `frontend/index.html` in your browser — no server needed for the UI.
 
 | Variable | Description |
 |---|---|
-| `GEMINI_API_KEY` | Your Google Gemini API key |
 | `NVIDIA_API_KEY` | Your NVIDIA API key |
 | `CHROMA_DB_PATH` | Path to ChromaDB storage (default: `./chroma_db`) |
 | `CHUNKS_PER_BOOK` | Number of chunks to retrieve per query (default: `3`) |
@@ -101,7 +100,7 @@ User Query
 [Prompt with Context]
     │
     ▼
-[Gemini 2.5 Flash Lite]  ←── Answer grounded ONLY in retrieved texts
+[Llama-3.3-70b-instruct]  ←── Answer grounded ONLY in retrieved texts
     │
     ▼
 Response with source citations (book + chapter/verse)
