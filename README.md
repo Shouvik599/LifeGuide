@@ -113,3 +113,7 @@ Response with source citations (book + chapter/verse)
 - The LLM is instructed **never** to answer from outside the provided texts
 - Each response includes **source citations** (which book the answer came from)
 - Responses synthesize wisdom **across all books** when relevant
+
+## 🎬 Demo
+
+App Link : https://shouvik99-lifeguide.hf.space/
