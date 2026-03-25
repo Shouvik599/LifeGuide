@@ -41,6 +41,57 @@
       /* violet — Sikh royal purple */
     }
 
+    /* Animated Thinking state for streaming */
+    .thinking-dots {
+      display: inline-flex;
+      gap: 4px;
+      margin-left: 4px;
+    }
+
+    .thinking-dots span {
+      width: 4px;
+      height: 4px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      80%,
+      100% {
+        transform: scale(0);
+      }
+
+      40% {
+        transform: scale(1);
+      }
+    }
+
+    /* Make streaming text fade in slightly for smoothness */
+    #currentStreamingMsg p {
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0.7;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Ensure the bubble has a minimum height so it doesn't look like a "small block" */
+    .msg-bubble:empty::before {
+      content: "Writing wisdom...";
+      color: var(--muted);
+      font-style: italic;
+      font-size: 0.9rem;
+    }
+
     html,
     body {
       height: 100%;
@@ -723,18 +774,92 @@
           throw new Error(err.detail || "Server error");
         }
 
-        const data = await res.json();
-        replaceLoadingWithAnswer(loadingEl, data);
+        // Initialize variables to build the UI
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let fullAnswer = "";
+        let sourcesData = [];
+
+        // Prepare the assistant UI bubble immediately
+        loadingEl.innerHTML = `
+  <span class="msg-label">Sacred Texts</span>
+  <div class="msg-bubble" id="currentStreamingMsg">
+    <div class="loading-text">The scriptures are being revealed<span class="thinking-dots"><span></span><span></span><span></span></span></div>
+  </div>
+  <div id="currentStreamingSources"></div>
+`;
+        const bubble = document.getElementById("currentStreamingMsg");
+        const sourcesContainer = document.getElementById("currentStreamingSources");
+        let firstTokenReceived = false;
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split("\n");
+
+          for (const line of lines) {
+            if (!line.trim()) continue;
+            try {
+              const parsed = JSON.parse(line);
+
+              if (parsed.type === "token") {
+                //Remove the loading text as soon as the first word arrives
+                if (!firstTokenReceived) {
+                  bubble.innerHTML = "";
+                  firstTokenReceived = true;
+                }
+
+                fullAnswer += parsed.data;
+                // Dynamically update the bubble with formatted markdown/paragraphs
+                bubble.innerHTML = formatAnswer(fullAnswer);
+                scrollToBottom();
+              }
+              else if (parsed.type === "sources") {
+                sourcesData = parsed.data;
+                renderSourcesInPlace(sourcesContainer, sourcesData);
+              }
+              else if (parsed.type === "cache") {
+                bubble.innerHTML = formatAnswer(parsed.data.answer);
+                renderSourcesInPlace(sourcesContainer, parsed.data.sources);
+                scrollToBottom();
+              }
+            } catch (e) {
+              console.error("Error parsing NDJSON line:", e);
+            }
+          }
+        }
+
+        // Clean up IDs once done so next messages don't conflict
+        bubble.removeAttribute("id");
+        sourcesContainer.removeAttribute("id");
+
       } catch (err) {
         let msg = err.message;
-        if (msg.includes("fetch") || msg.includes("NetworkError") || msg.includes("Failed")) {
-          msg = "Connecting to the divine knowledge base... Please wait a moment or refresh the page.";
-        }
         replaceLoadingWithError(loadingEl, msg);
       } finally {
         isLoading = false;
         document.getElementById("sendBtn").disabled = false;
         input.focus();
+      }
+    }
+
+    // Helper to render sources inside the streaming flow
+    function renderSourcesInPlace(container, sources) {
+      const sourceTags = (sources || []).map(s => {
+        const cls = getSourceClass(s.book);
+        // Use verse citations as the primary text
+        return `<span class="source-tag ${cls}" title="${s.snippet}">📖 ${s.book}</span>`;
+      }).join("");
+
+      if (sourceTags) {
+        container.innerHTML = `
+      <div class="sources">
+        <div class="sources-label">Citations</div>
+        <div class="source-tags">${sourceTags}</div>
+      </div>
+    `;
       }
     }
 

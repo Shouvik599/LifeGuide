@@ -20,6 +20,7 @@ from langchain_community.document_loaders import PyPDFLoader, PyMuPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_nvidia_ai_endpoints import NVIDIAEmbeddings
 from langchain_chroma import Chroma
+import re
 
 load_dotenv()
 
@@ -46,7 +47,44 @@ CHUNK_SIZE = 800       # characters per chunk
 CHUNK_OVERLAP = 150    # overlap to preserve verse context across boundaries
 
 
+# Regex patterns for different scriptures
+VERSE_PATTERNS = {
+    "Bhagavad Gita": r"(?:Verse\s+)?(\d+\.\d+)",          # Matches 2.47 or Verse 2.47
+    "Quran": r"(\d+:\d+)",                                # Matches 2:286
+    "Bible": r"(\d+\s+)?[A-Z][a-z]+\s+\d+:\d+",           # Matches John 3:16 or 1 Cor 13:4
+    "Guru Granth Sahib": r"(?:Ang\s+)?(\d+)"              # Matches Ang 1 or 1
+}
+
+# Patterns to identify structure in the text
+STRUCTURE_PATTERNS = {
+    "Bhagavad Gita": r"(\d+)\.(\d+)",       # Matches 2.47 (Chapter.Verse)
+    "Quran": r"(\d+):(\d+)",               # Matches 2:186 (Surah:Verse)
+    "Bible": r"(\d+):(\d+)",               # Matches 3:16 (Chapter:Verse)
+    "Guru Granth Sahib": r"Ang\s+(\d+)"    # Matches Ang 1
+}
+
 # ─── Helpers ──────────────────────────────────────────────────────────────────
+
+def parse_structure(text, book_name):
+    pattern = STRUCTURE_PATTERNS.get(book_name)
+    if not pattern:
+        return {}
+    
+    match = re.search(pattern, text)
+    if match:
+        if book_name == "Guru Granth Sahib":
+            return {"ang": int(match.group(1))}
+        return {"chapter": int(match.group(1)), "verse": int(match.group(2))}
+    return {}
+
+def extract_verse(text: str, book_name: str) -> str:
+    """Extracts a verse reference from a text chunk based on the book."""
+    pattern = VERSE_PATTERNS.get(book_name)
+    if not pattern:
+        return "Unknown"
+    
+    match = re.search(pattern, text)
+    return match.group(0) if match else "General Context"
 
 def detect_book_name(filename: str) -> str:
     """Infer the book's display name from its filename."""
@@ -83,6 +121,7 @@ def tag_documents(docs: list, book_name: str, source_file: str) -> list:
     """
     for doc in docs:
         doc.metadata["book"] = book_name
+        doc.metadata["verse_citation"] = extract_verse(doc.page_content, book_name)
         doc.metadata["source_file"] = source_file
         # Keep the page number if already present from the loader
         if "page" not in doc.metadata:
@@ -135,6 +174,16 @@ def ingest():
     )
     chunks = splitter.split_documents(all_docs)
     print(f"     → {len(chunks)} chunks created")
+    
+    # Add verse citations to chunk metadata for better source attribution
+    print(f"🏷️   Parsing structure (chapters/verses) for {len(chunks)} chunks...")
+    for chunk in chunks:
+        # Use the parse_structure function you defined
+        structure = parse_structure(chunk.page_content, chunk.metadata["book"])
+        # Update the chunk metadata so it is saved in ChromaDB
+        chunk.metadata.update(structure)
+
+    print(f"     → {len(chunks)} chunks created and tagged")
 
     # ── Step 3: Embed & store ────────────────────────────────────────────────
     print(f"\n🔢  Initialising NVIDIA embedding model (llama-nemotron-embed-vl-1b-v2)...")

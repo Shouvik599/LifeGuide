@@ -1,19 +1,28 @@
-# Use an official Python runtime as a parent image
 FROM python:3.11-slim
 
-# Set the working directory in the container
+# Set working directory
 WORKDIR /app
 
-# Copy the requirements file and install dependencies
+# Install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the application code
-COPY . .
+# Create a non-root user for HF compliance
+RUN useradd -m -u 1000 user
+USER user
+ENV HOME=/home/user \
+    PATH=/home/user/.local/bin:$PATH
 
-# Make the start script executable
+# Set working directory to user's home
+WORKDIR $HOME/app
+
+# Copy application code and set ownership to our user
+COPY --chown=user . $HOME/app
+
+# Ensure the start script is executable
 RUN chmod +x start.sh
 
 # HF Spaces requires port 7860
-# We use the shell script as the entry point
+EXPOSE 7860
+
 CMD ["./start.sh"]
