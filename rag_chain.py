@@ -334,11 +334,9 @@ def query_sacred_texts(question: str):
         snippet = doc.page_content[:200].strip() + "..."
         if display_name not in seen_sources:
             seen_sources.add(display_name)
+            print("Display name:", display_name)
+            print("Page:", cite_val)
             sources.append({"book": display_name, "page": cite_val, "snippet": snippet})
-    # Print book and page of each retrieved source for debugging
-    print("\n📚 Retrieved sources:")
-    for s in sources:
-        print(f"  - {s['book']} ({s['page']})")    
     # Step 2: Format context grouped by book
     context = format_docs(source_docs)
     full_answer =""
