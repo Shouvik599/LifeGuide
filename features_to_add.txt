@@ -1,0 +1,20 @@
+Contextual chunk expansion — when a chunk is retrieved, also fetch the surrounding chunks (±1) to avoid cut-off verses losing their meaning
+Hypothetical Document Embedding (HyDE) — generate a hypothetical ideal answer first, embed that, then search — dramatically improves recall for abstract questions
+
+Multi-turn conversation — add chat history using LangChain ConversationBufferMemory so users can ask follow-up questions like "Elaborate on the second point"
+Answer faithfulness scoring — use an LLM-as-judge step to self-check whether the answer is actually grounded in the retrieved chunks before returning it
+Query rewriting — if the user query is vague, have the LLM rephrase it into a better search query before retrieval (improves semantic matching)
+
+Multi-language support — ingest Arabic Quran + Sanskrit Gita alongside English translations; embed both and let users query in their preferred language
+Incremental ingestion — track which PDFs have been ingested (via a manifest file) so re-running ingest.py only processes new books, not the whole library
+Book versioning — support multiple translations of the same book (e.g. KJV vs NIV Bible) and let users choose
+
+Snippet preview on hover — show the actual retrieved passage when hovering over a source badge in the UI
+Query suggestions — after each answer, suggest 2-3 related follow-up questions
+Topic explorer — a sidebar with pre-grouped themes (Death & Afterlife, Compassion, Duty, Prayer) that users can browse
+Compare mode — a dedicated side-by-side view for "How does Book A vs Book B address X"
+
+Hallucination guardrail — run a separate verification pass checking every claim in the answer maps back to a retrieved chunk; flag or remove unsupported claims
+Out-of-scope detection — classify queries before retrieval; politely decline non-spiritual questions (e.g. "Write me code") with a prompt-level or classifier-level guard
+Rate limiting — add per-IP request throttling in FastAPI to prevent API key exhaustion
+API key security — move to server-side key storage properly; never expose NVIDIA_API_KEY or GEMINI_API_KEY in frontend calls

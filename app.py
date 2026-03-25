@@ -15,8 +15,9 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
-from fastapi.responses import FileResponse
+from fastapi.responses import StreamingResponse, FileResponse
 from rag_chain import query_sacred_texts, get_embeddings, get_vector_store  # ← FIXED
+from starlette.concurrency import run_in_threadpool
 
 load_dotenv()
 
@@ -91,8 +92,8 @@ def list_books():
         raise HTTPException(status_code=500, detail=f"Could not read knowledge base: {e}")
 
 
-@app.post("/ask", response_model=AskResponse, tags=["Query"])
-def ask(request: AskRequest):
+@app.post("/ask", tags=["Query"])
+async def ask(request: AskRequest):
     """
     Ask a spiritual or philosophical question.
     The answer is grounded strictly in the sacred texts.
@@ -101,11 +102,10 @@ def ask(request: AskRequest):
         raise HTTPException(status_code=400, detail="Question cannot be empty.")
 
     try:
-        result = query_sacred_texts(request.question)
-        return AskResponse(
-            question=request.question,
-            answer=result["answer"],
-            sources=[Source(**s) for s in result["sources"]],
+        
+        return StreamingResponse(
+        query_sacred_texts(request.question),
+        media_type="application/json"
         )
     except FileNotFoundError:
         raise HTTPException(
@@ -137,4 +137,4 @@ if __name__ == "__main__":
     print(f"🌐  Running at : http://{host}:{port}")
     print(f"{'─' * 40}\n")
 
-    uvicorn.run("app:app", host=host, port=port, reload=False) # reload=False for production
+    uvicorn.run("app:app", host=host, port=port, reload=False) # reload=False for production 

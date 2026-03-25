@@ -3,8 +3,9 @@ langchain
 langchain-community
 langchain-chroma
 langchain-nvidia-ai-endpoints
-langchain-text-splitters          
-
+langchain-text-splitters 
+langchain-core        
+rank_bm25
 # Vector Store
 chromadb
 
