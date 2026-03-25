@@ -18,3 +18,9 @@ Hallucination guardrail — run a separate verification pass checking every clai
 Out-of-scope detection — classify queries before retrieval; politely decline non-spiritual questions (e.g. "Write me code") with a prompt-level or classifier-level guard
 Rate limiting — add per-IP request throttling in FastAPI to prevent API key exhaustion
 API key security — move to server-side key storage properly; never expose NVIDIA_API_KEY or GEMINI_API_KEY in frontend calls
+
+
+Need to debug -
+1. General questions not citing verses
+2. For exact verses cache threshold score is returning same for chapter 2 verse 4 and chapter 1 verse 10
+3. 
