@@ -335,6 +335,10 @@ def query_sacred_texts(question: str):
         if display_name not in seen_sources:
             seen_sources.add(display_name)
             sources.append({"book": display_name, "page": cite_val, "snippet": snippet})
+    # Print book and page of each retrieved source for debugging
+    print("\n📚 Retrieved sources:")
+    for s in sources:
+        print(f"  - {s['book']} ({s['page']})")    
     # Step 2: Format context grouped by book
     context = format_docs(source_docs)
     full_answer =""
@@ -361,6 +365,7 @@ def query_sacred_texts(question: str):
         "answer": full_answer,
         "sources": display_sources,
     }
+    
     
     cache_coll.add(
         documents=[question],
