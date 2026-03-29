@@ -13,13 +13,7 @@
 
   <style>
     /* ── Reset & Base ─────────────────────────────────────────── */
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --bg: #0d0b07;
@@ -32,68 +26,13 @@
       --cream: #f0e6cc;
       --muted: #7a6a4a;
       --gita: #e07b3b;
-      /* saffron */
       --quran: #3bba85;
-      /* green */
       --bible: #5b8ce0;
-      /* blue */
       --granth: #b07ce0;
-      /* violet — Sikh royal purple */
+      --danger: #e06060;
     }
 
-    /* Animated Thinking state for streaming */
-    .thinking-dots {
-      display: inline-flex;
-      gap: 4px;
-      margin-left: 4px;
-    }
-
-    .thinking-dots span {
-      width: 4px;
-      height: 4px;
-      background: var(--gold);
-      border-radius: 50%;
-      animation: bounce 1.4s infinite ease-in-out;
-    }
-
-    @keyframes bounce {
-
-      0%,
-      80%,
-      100% {
-        transform: scale(0);
-      }
-
-      40% {
-        transform: scale(1);
-      }
-    }
-
-    /* Make streaming text fade in slightly for smoothness */
-    #currentStreamingMsg p {
-      animation: fadeIn 0.3s ease-in;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0.7;
-      }
-
-      to {
-        opacity: 1;
-      }
-    }
-
-    /* Ensure the bubble has a minimum height so it doesn't look like a "small block" */
-    .msg-bubble:empty::before {
-      content: "Writing wisdom...";
-      color: var(--muted);
-      font-style: italic;
-      font-size: 0.9rem;
-    }
-
-    html,
-    body {
+    html, body {
       height: 100%;
       background: var(--bg);
       color: var(--cream);
@@ -103,15 +42,14 @@
       overflow: hidden;
     }
 
-    /* ── Background texture ───────────────────────────────────── */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(201, 153, 58, .07) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 80% at 80% 90%, rgba(91, 140, 224, .05) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 50% at 50% 50%, rgba(176, 124, 224, .04) 0%, transparent 60%),
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(201,153,58,.07) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 90%, rgba(91,140,224,.05) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 50% 50%, rgba(176,124,224,.04) 0%, transparent 60%),
         url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
       pointer-events: none;
       z-index: 0;
@@ -131,106 +69,121 @@
 
     /* ── Header ───────────────────────────────────────────────── */
     header {
-      padding: 28px 0 18px;
+      padding: 20px 0 14px;
       text-align: center;
       border-bottom: 1px solid var(--border);
+      position: relative;
     }
 
     .mandala {
-      font-size: 2rem;
+      font-size: 1.8rem;
       letter-spacing: .5rem;
       color: var(--gold);
       opacity: .6;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       animation: spin 60s linear infinite;
       display: inline-block;
     }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     h1 {
       font-family: 'Cinzel Decorative', serif;
-      font-size: clamp(1.2rem, 3vw, 1.9rem);
+      font-size: clamp(1.1rem, 3vw, 1.7rem);
       font-weight: 400;
       color: var(--gold-pale);
       letter-spacing: .12em;
-      text-shadow: 0 0 40px rgba(201, 153, 58, .3);
+      text-shadow: 0 0 40px rgba(201,153,58,.3);
     }
 
     .subtitle {
       font-family: 'IM Fell English', serif;
       font-style: italic;
-      font-size: .95rem;
+      font-size: .9rem;
       color: var(--muted);
-      margin-top: 4px;
+      margin-top: 3px;
     }
 
     .badges {
       display: flex;
       justify-content: center;
-      gap: 12px;
-      margin-top: 12px;
+      gap: 10px;
+      margin-top: 10px;
       flex-wrap: wrap;
     }
 
     .badge {
-      font-size: .72rem;
+      font-size: .7rem;
       letter-spacing: .1em;
       text-transform: uppercase;
-      padding: 3px 10px;
+      padding: 2px 9px;
       border-radius: 20px;
       border: 1px solid;
       font-family: 'Cormorant Garamond', serif;
       font-weight: 600;
     }
+    .badge-gita   { color: var(--gita);   border-color: var(--gita);   background: rgba(224,123,59,.1); }
+    .badge-quran  { color: var(--quran);  border-color: var(--quran);  background: rgba(59,186,133,.1); }
+    .badge-bible  { color: var(--bible);  border-color: var(--bible);  background: rgba(91,140,224,.1); }
+    .badge-granth { color: var(--granth); border-color: var(--granth); background: rgba(176,124,224,.1); }
 
-    .badge-gita {
-      color: var(--gita);
-      border-color: var(--gita);
-      background: rgba(224, 123, 59, .1);
+    /* ── Session bar ──────────────────────────────────────────── */
+    .session-bar {
+      display: none;   /* hidden until a conversation starts */
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 10px;
+      padding: 5px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      font-size: .75rem;
+      color: var(--muted);
     }
 
-    .badge-quran {
-      color: var(--quran);
-      border-color: var(--quran);
-      background: rgba(59, 186, 133, .1);
+    .session-bar.visible { display: flex; }
+
+    .session-turn-count {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
     }
 
-    .badge-bible {
-      color: var(--bible);
-      border-color: var(--bible);
-      background: rgba(91, 140, 224, .1);
+    .session-turn-count span {
+      color: var(--gold-light);
+      font-weight: 600;
     }
 
-    .badge-granth {
-      color: var(--granth);
-      border-color: var(--granth);
-      background: rgba(176, 124, 224, .1);
+    .new-convo-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: .75rem;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .new-convo-btn:hover {
+      border-color: var(--danger);
+      color: var(--danger);
     }
 
     /* ── Chat Window ──────────────────────────────────────────── */
     .chat-window {
       overflow-y: auto;
-      padding: 28px 0;
+      padding: 24px 0;
       display: flex;
       flex-direction: column;
       gap: 24px;
       scrollbar-width: thin;
       scrollbar-color: var(--border) transparent;
     }
-
-    .chat-window::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    .chat-window::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 4px;
-    }
+    .chat-window::-webkit-scrollbar { width: 4px; }
+    .chat-window::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
     /* ── Welcome State ────────────────────────────────────────── */
     .welcome {
@@ -239,84 +192,46 @@
       padding: 20px;
       max-width: 500px;
     }
-
-    .welcome-icon {
-      font-size: 3.5rem;
-      margin-bottom: 16px;
-      filter: drop-shadow(0 0 20px rgba(201, 153, 58, .4));
-    }
-
+    .welcome-icon { font-size: 3.2rem; margin-bottom: 14px; filter: drop-shadow(0 0 20px rgba(201,153,58,.4)); }
     .welcome h2 {
       font-family: 'IM Fell English', serif;
       font-style: italic;
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       color: var(--gold-light);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
+    .welcome p { font-size: .92rem; color: var(--muted); line-height: 1.8; }
 
-    .welcome p {
-      font-size: .95rem;
-      color: var(--muted);
-      line-height: 1.8;
-    }
-
-    .suggested-queries {
-      margin-top: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
+    .suggested-queries { margin-top: 20px; display: flex; flex-direction: column; gap: 7px; }
     .suggested-queries button {
       background: var(--surface);
       border: 1px solid var(--border);
       color: var(--cream);
-      padding: 10px 16px;
+      padding: 9px 14px;
       border-radius: 8px;
       font-family: 'Cormorant Garamond', serif;
-      font-size: .95rem;
+      font-size: .92rem;
       font-style: italic;
       cursor: pointer;
       transition: all .2s;
       text-align: left;
     }
-
-    .suggested-queries button:hover {
-      border-color: var(--gold);
-      color: var(--gold-pale);
-      background: var(--surface-2);
-    }
+    .suggested-queries button:hover { border-color: var(--gold); color: var(--gold-pale); background: var(--surface-2); }
 
     /* ── Messages ─────────────────────────────────────────────── */
     .message {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
       animation: fadeUp .4s ease both;
     }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .message-user {
-      align-items: flex-end;
-    }
-
-    .message-assistant {
-      align-items: flex-start;
-    }
+    .message-user      { align-items: flex-end; }
+    .message-assistant { align-items: flex-start; }
 
     .msg-label {
-      font-size: .7rem;
+      font-size: .68rem;
       letter-spacing: .15em;
       text-transform: uppercase;
       color: var(--muted);
@@ -326,7 +241,7 @@
 
     .msg-bubble {
       max-width: 92%;
-      padding: 16px 20px;
+      padding: 14px 18px;
       border-radius: 12px;
       line-height: 1.75;
     }
@@ -336,40 +251,40 @@
       border: 1px solid var(--border);
       color: var(--cream);
       font-style: italic;
-      font-size: 1rem;
+      font-size: .97rem;
       border-bottom-right-radius: 4px;
     }
 
     .message-assistant .msg-bubble {
-      background: linear-gradient(135deg, var(--surface) 0%, rgba(30, 26, 17, .95) 100%);
-      border: 1px solid rgba(201, 153, 58, .2);
+      background: linear-gradient(135deg, var(--surface) 0%, rgba(30,26,17,.95) 100%);
+      border: 1px solid rgba(201,153,58,.2);
       color: var(--cream);
-      font-size: 1rem;
+      font-size: .97rem;
       border-bottom-left-radius: 4px;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, .4), inset 0 1px 0 rgba(201, 153, 58, .1);
+      box-shadow: 0 4px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(201,153,58,.1);
     }
 
-    .msg-bubble p {
-      margin-bottom: 1em;
-    }
+    .msg-bubble p            { margin-bottom: 1em; }
+    .msg-bubble p:last-child { margin-bottom: 0; }
+    .msg-bubble strong       { color: var(--gold-light); font-weight: 600; }
 
-    .msg-bubble p:last-child {
-      margin-bottom: 0;
-    }
-
-    .msg-bubble strong {
-      color: var(--gold-light);
-      font-weight: 600;
+    /* Follow-up continuation pill */
+    .followup-pill {
+      font-size: .68rem;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: rgba(201,153,58,.08);
+      border: 1px solid rgba(201,153,58,.2);
+      color: var(--muted);
+      margin-left: 6px;
+      font-style: italic;
+      vertical-align: middle;
     }
 
     /* ── Sources Panel ────────────────────────────────────────── */
-    .sources {
-      max-width: 92%;
-      margin-top: 4px;
-    }
-
+    .sources { max-width: 92%; margin-top: 4px; }
     .sources-label {
-      font-size: .72rem;
+      font-size: .7rem;
       letter-spacing: .12em;
       text-transform: uppercase;
       color: var(--muted);
@@ -378,27 +293,12 @@
       align-items: center;
       gap: 6px;
     }
+    .sources-label::before, .sources-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .sources-label::before { max-width: 20px; }
 
-    .sources-label::before,
-    .sources-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-
-    .sources-label::before {
-      max-width: 20px;
-    }
-
-    .source-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
+    .source-tags { display: flex; flex-wrap: wrap; gap: 6px; }
     .source-tag {
-      font-size: .78rem;
+      font-size: .76rem;
       padding: 4px 10px;
       border-radius: 6px;
       border: 1px solid;
@@ -406,101 +306,55 @@
       cursor: default;
       transition: all .2s;
     }
+    .source-tag:hover { transform: translateY(-1px); filter: brightness(1.2); }
 
-    .source-tag:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.2);
-    }
-
-    .source-gita {
-      color: var(--gita);
-      border-color: rgba(224, 123, 59, .4);
-      background: rgba(224, 123, 59, .08);
-    }
-
-    .source-quran {
-      color: var(--quran);
-      border-color: rgba(59, 186, 133, .4);
-      background: rgba(59, 186, 133, .08);
-    }
-
-    .source-bible {
-      color: var(--bible);
-      border-color: rgba(91, 140, 224, .4);
-      background: rgba(91, 140, 224, .08);
-    }
-
-    .source-granth {
-      color: var(--granth);
-      border-color: rgba(176, 124, 224, .4);
-      background: rgba(176, 124, 224, .08);
-    }
-
-    .source-other {
-      color: var(--gold-light);
-      border-color: rgba(201, 153, 58, .4);
-      background: rgba(201, 153, 58, .08);
-    }
+    .source-gita   { color: var(--gita);   border-color: rgba(224,123,59,.4);  background: rgba(224,123,59,.08); }
+    .source-quran  { color: var(--quran);  border-color: rgba(59,186,133,.4);  background: rgba(59,186,133,.08); }
+    .source-bible  { color: var(--bible);  border-color: rgba(91,140,224,.4);  background: rgba(91,140,224,.08); }
+    .source-granth { color: var(--granth); border-color: rgba(176,124,224,.4); background: rgba(176,124,224,.08); }
+    .source-other  { color: var(--gold-light); border-color: rgba(201,153,58,.4); background: rgba(201,153,58,.08); }
 
     /* ── Loading ──────────────────────────────────────────────── */
     .loading {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 14px 18px;
-      border: 1px solid rgba(201, 153, 58, .15);
+      gap: 10px;
+      padding: 12px 16px;
+      border: 1px solid rgba(201,153,58,.15);
       border-radius: 12px;
       background: var(--surface);
       width: fit-content;
       max-width: 280px;
     }
-
-    .loading-dots {
-      display: flex;
-      gap: 5px;
-    }
-
+    .loading-dots { display: flex; gap: 5px; }
     .loading-dots span {
-      width: 6px;
-      height: 6px;
+      width: 6px; height: 6px;
       border-radius: 50%;
       background: var(--gold);
       animation: dot-pulse 1.4s ease-in-out infinite;
     }
-
-    .loading-dots span:nth-child(2) {
-      animation-delay: .2s;
-    }
-
-    .loading-dots span:nth-child(3) {
-      animation-delay: .4s;
-    }
-
+    .loading-dots span:nth-child(2) { animation-delay: .2s; }
+    .loading-dots span:nth-child(3) { animation-delay: .4s; }
     @keyframes dot-pulse {
-
-      0%,
-      80%,
-      100% {
-        opacity: .2;
-        transform: scale(.8);
-      }
-
-      40% {
-        opacity: 1;
-        transform: scale(1.1);
-      }
+      0%,80%,100% { opacity: .2; transform: scale(.8); }
+      40%          { opacity: 1;  transform: scale(1.1); }
     }
+    .loading-text { font-size: .82rem; font-style: italic; color: var(--muted); }
 
-    .loading-text {
-      font-size: .85rem;
-      font-style: italic;
-      color: var(--muted);
+    /* ── Thinking dots (streaming) ────────────────────────────── */
+    .thinking-dots { display: inline-flex; gap: 4px; margin-left: 4px; }
+    .thinking-dots span {
+      width: 4px; height: 4px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out;
     }
+    @keyframes bounce { 0%,80%,100% { transform: scale(0); } 40% { transform: scale(1); } }
 
     /* ── Error ────────────────────────────────────────────────── */
     .error-bubble {
-      background: rgba(180, 60, 60, .1);
-      border: 1px solid rgba(180, 60, 60, .3);
+      background: rgba(180,60,60,.1);
+      border: 1px solid rgba(180,60,60,.3);
       color: #e08080;
       padding: 12px 16px;
       border-radius: 10px;
@@ -509,52 +363,38 @@
     }
 
     /* ── Input Area ───────────────────────────────────────────── */
-    .input-area {
-      padding: 16px 0 24px;
-      border-top: 1px solid var(--border);
-    }
-
-    .input-row {
-      display: flex;
-      gap: 10px;
-      align-items: flex-end;
-    }
+    .input-area { padding: 14px 0 22px; border-top: 1px solid var(--border); }
+    .input-row  { display: flex; gap: 10px; align-items: flex-end; }
 
     textarea {
       flex: 1;
       background: var(--surface);
       border: 1px solid var(--border);
       color: var(--cream);
-      padding: 14px 16px;
+      padding: 13px 15px;
       border-radius: 12px;
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1rem;
+      font-size: .97rem;
       line-height: 1.6;
       resize: none;
-      min-height: 52px;
-      max-height: 140px;
+      min-height: 50px;
+      max-height: 130px;
       outline: none;
       transition: border-color .2s, box-shadow .2s;
     }
-
-    textarea::placeholder {
-      color: var(--muted);
-      font-style: italic;
-    }
-
+    textarea::placeholder { color: var(--muted); font-style: italic; }
     textarea:focus {
-      border-color: rgba(201, 153, 58, .5);
-      box-shadow: 0 0 0 3px rgba(201, 153, 58, .08);
+      border-color: rgba(201,153,58,.5);
+      box-shadow: 0 0 0 3px rgba(201,153,58,.08);
     }
 
     .send-btn {
-      width: 52px;
-      height: 52px;
+      width: 50px; height: 50px;
       border-radius: 12px;
-      border: 1px solid rgba(201, 153, 58, .4);
-      background: linear-gradient(135deg, rgba(201, 153, 58, .2), rgba(201, 153, 58, .05));
+      border: 1px solid rgba(201,153,58,.4);
+      background: linear-gradient(135deg, rgba(201,153,58,.2), rgba(201,153,58,.05));
       color: var(--gold);
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       cursor: pointer;
       transition: all .2s;
       display: flex;
@@ -562,36 +402,15 @@
       justify-content: center;
       flex-shrink: 0;
     }
-
     .send-btn:hover:not(:disabled) {
-      background: linear-gradient(135deg, rgba(201, 153, 58, .35), rgba(201, 153, 58, .15));
+      background: linear-gradient(135deg, rgba(201,153,58,.35), rgba(201,153,58,.15));
       border-color: var(--gold);
       transform: translateY(-1px);
-      box-shadow: 0 4px 16px rgba(201, 153, 58, .2);
+      box-shadow: 0 4px 16px rgba(201,153,58,.2);
     }
+    .send-btn:disabled { opacity: .3; cursor: not-allowed; transform: none; }
 
-    .send-btn:disabled {
-      opacity: .3;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .input-hint {
-      font-size: .72rem;
-      color: var(--muted);
-      margin-top: 8px;
-      text-align: center;
-      font-style: italic;
-    }
-
-    /* ── Divider line ─────────────────────────────────────────── */
-    .ornament {
-      text-align: center;
-      color: var(--border);
-      font-size: .8rem;
-      letter-spacing: .4em;
-      margin: 4px 0;
-    }
+    .input-hint { font-size: .7rem; color: var(--muted); margin-top: 7px; text-align: center; font-style: italic; }
   </style>
 </head>
 
@@ -609,6 +428,16 @@
         <span class="badge badge-bible">Bible</span>
         <span class="badge badge-granth">Guru Granth Sahib</span>
       </div>
+
+      <!-- Session status bar — visible once conversation starts -->
+      <div class="session-bar" id="sessionBar">
+        <span class="session-turn-count" id="turnCountLabel">
+          Turn <span id="turnCount">0</span>
+        </span>
+        <button class="new-convo-btn" onclick="startNewConversation()" title="Clear history and start fresh">
+          ↺ New Conversation
+        </button>
+      </div>
     </header>
 
     <!-- Chat Window -->
@@ -616,15 +445,18 @@
       <div class="welcome" id="welcomePane">
         <div class="welcome-icon">🕊️</div>
         <h2>"Seek, and it shall be given unto you"</h2>
-        <p>Ask any spiritual or philosophical question. Answers are drawn exclusively from the Bhagavad Gita, Quran,
-          Bible, and Guru Granth Sahib.</p>
+        <p>Ask any spiritual or philosophical question. Answers are drawn exclusively from the
+           Bhagavad Gita, Quran, Bible, and Guru Granth Sahib.<br><br>
+           <em style="color:var(--gold-light); font-size:.9rem;">
+             You can now ask follow-up questions — the guide remembers the conversation.
+           </em>
+        </p>
         <div class="suggested-queries">
           <button onclick="askSuggested(this)">What do the scriptures say about forgiveness?</button>
           <button onclick="askSuggested(this)">How should one face fear and death?</button>
           <button onclick="askSuggested(this)">What is the purpose of prayer and worship?</button>
           <button onclick="askSuggested(this)">What is the nature of the soul according to each religion?</button>
-          <button onclick="askSuggested(this)">What do the scriptures teach about humility and selfless
-            service?</button>
+          <button onclick="askSuggested(this)">What do the scriptures teach about humility and selfless service?</button>
         </div>
       </div>
     </div>
@@ -632,26 +464,88 @@
     <!-- Input -->
     <div class="input-area">
       <div class="input-row">
-        <textarea id="questionInput" placeholder="Ask a question from the sacred texts…" rows="1"
-          onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-        <button class="send-btn" id="sendBtn" onclick="sendQuestion()" title="Ask (Enter)">
-          ✦
-        </button>
+        <textarea id="questionInput"
+                  placeholder="Ask a question, or follow up on the previous answer…"
+                  rows="1"
+                  onkeydown="handleKey(event)"
+                  oninput="autoResize(this)"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendQuestion()" title="Ask (Enter)">✦</button>
       </div>
-      <p class="input-hint">Press Enter to ask · Shift+Enter for new line · Answers grounded strictly in the sacred
-        texts</p>
+      <p class="input-hint">Enter to ask · Shift+Enter for new line · Follow-ups like "elaborate on point 2" work!</p>
     </div>
 
   </div>
 
   <script>
     const API_BASE = window.location.origin;
-    let isLoading = false;
+    let isLoading  = false;
+    let sessionId  = null;      // persisted across the page session
+    let turnCount  = 0;         // how many full turns this session
 
-    // ── Helpers ────────────────────────────────────────────────
+    // ── Session helpers ────────────────────────────────────────
+    function loadSession() {
+      sessionId = localStorage.getItem("rag_session_id") || null;
+    }
+
+    function saveSession(id) {
+      sessionId = id;
+      localStorage.setItem("rag_session_id", id);
+    }
+
+    function updateSessionBar() {
+      const bar   = document.getElementById("sessionBar");
+      const count = document.getElementById("turnCount");
+      if (turnCount > 0) {
+        bar.classList.add("visible");
+        count.textContent = turnCount;
+      } else {
+        bar.classList.remove("visible");
+      }
+    }
+
+    async function startNewConversation() {
+      if (!sessionId) return;
+      if (turnCount > 0 && !confirm("Start a new conversation? This will clear all history.")) return;
+
+      try {
+        await fetch(`${API_BASE}/clear`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ session_id: sessionId }),
+        });
+      } catch (_) {}
+
+      // Reset everything
+      sessionId  = null;
+      turnCount  = 0;
+      localStorage.removeItem("rag_session_id");
+      updateSessionBar();
+
+      const chatWindow = document.getElementById("chatWindow");
+      chatWindow.innerHTML = `
+        <div class="welcome" id="welcomePane">
+          <div class="welcome-icon">🕊️</div>
+          <h2>"Seek, and it shall be given unto you"</h2>
+          <p>Ask any spiritual or philosophical question. Answers are drawn exclusively from the
+             Bhagavad Gita, Quran, Bible, and Guru Granth Sahib.<br><br>
+             <em style="color:var(--gold-light); font-size:.9rem;">
+               You can now ask follow-up questions — the guide remembers the conversation.
+             </em>
+          </p>
+          <div class="suggested-queries">
+            <button onclick="askSuggested(this)">What do the scriptures say about forgiveness?</button>
+            <button onclick="askSuggested(this)">How should one face fear and death?</button>
+            <button onclick="askSuggested(this)">What is the purpose of prayer and worship?</button>
+            <button onclick="askSuggested(this)">What is the nature of the soul according to each religion?</button>
+            <button onclick="askSuggested(this)">What do the scriptures teach about humility and selfless service?</button>
+          </div>
+        </div>`;
+    }
+
+    // ── DOM Helpers ────────────────────────────────────────────
     function getSourceClass(book) {
       const b = book.toLowerCase();
-      if (b.includes("gita")) return "source-gita";
+      if (b.includes("gita"))              return "source-gita";
       if (b.includes("quran") || b.includes("koran")) return "source-quran";
       if (b.includes("bible") || b.includes("testament")) return "source-bible";
       if (b.includes("granth") || b.includes("guru")) return "source-granth";
@@ -670,23 +564,28 @@
 
     function autoResize(el) {
       el.style.height = "auto";
-      el.style.height = Math.min(el.scrollHeight, 140) + "px";
+      el.style.height = Math.min(el.scrollHeight, 130) + "px";
     }
 
     function formatAnswer(text) {
-      // Convert markdown-ish bold (**text**) to <strong>
       text = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-      // Wrap paragraphs
       return text.split(/\n\n+/).filter(p => p.trim()).map(p => `<p>${p.trim()}</p>`).join("");
     }
 
-    // ── Append message to chat ─────────────────────────────────
-    function appendUserMessage(question) {
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    // ── Message rendering ──────────────────────────────────────
+    function appendUserMessage(question, isFollowup) {
       const w = document.getElementById("chatWindow");
       const div = document.createElement("div");
       div.className = "message message-user";
+      const pill = isFollowup
+        ? `<span class="followup-pill">follow-up</span>`
+        : "";
       div.innerHTML = `
-        <span class="msg-label">You</span>
+        <span class="msg-label">You${pill}</span>
         <div class="msg-bubble">${escapeHtml(question)}</div>
       `;
       w.appendChild(div);
@@ -710,63 +609,46 @@
       return div;
     }
 
-    function replaceLoadingWithAnswer(loadingEl, data) {
-      const w = document.getElementById("chatWindow");
-
-      // Build source tags
-      const sourceTags = (data.sources || []).map(s => {
+    function renderSourcesInPlace(container, sources) {
+      const sourceTags = (sources || []).map(s => {
         const cls = getSourceClass(s.book);
-        return `<span class="source-tag ${cls}" title="Page ${s.page}">📖 ${s.book}</span>`;
+        return `<span class="source-tag ${cls}" title="${escapeHtml(s.snippet || '')}">📖 ${escapeHtml(s.book)}</span>`;
       }).join("");
-
-      const sourcesHtml = sourceTags ? `
-        <div class="sources">
-          <div class="sources-label">References</div>
-          <div class="source-tags">${sourceTags}</div>
-        </div>
-      ` : "";
-
-      loadingEl.innerHTML = `
-        <span class="msg-label">Sacred Texts</span>
-        <div class="msg-bubble">${formatAnswer(data.answer)}</div>
-        ${sourcesHtml}
-      `;
-      scrollToBottom();
+      if (sourceTags) {
+        container.innerHTML = `
+          <div class="sources">
+            <div class="sources-label">Citations</div>
+            <div class="source-tags">${sourceTags}</div>
+          </div>`;
+      }
     }
 
-    function replaceLoadingWithError(loadingEl, msg) {
-      loadingEl.innerHTML = `
-        <span class="msg-label">Error</span>
-        <div class="error-bubble">⚠️ ${escapeHtml(msg)}</div>
-      `;
-      scrollToBottom();
-    }
-
-    function escapeHtml(str) {
-      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    }
-
-    // ── Send question ──────────────────────────────────────────
+    // ── Core send flow ─────────────────────────────────────────
     async function sendQuestion() {
       if (isLoading) return;
-      const input = document.getElementById("questionInput");
+      const input    = document.getElementById("questionInput");
       const question = input.value.trim();
       if (!question) return;
 
       hideWelcome();
+      const isFollowup = turnCount > 0;
+
       isLoading = true;
       document.getElementById("sendBtn").disabled = true;
       input.value = "";
       input.style.height = "auto";
 
-      appendUserMessage(question);
+      appendUserMessage(question, isFollowup);
       const loadingEl = appendLoading();
 
       try {
+        const payload = { question };
+        if (sessionId) payload.session_id = sessionId;
+
         const res = await fetch(`${API_BASE}/ask`, {
-          method: "POST",
+          method:  "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ question }),
+          body:    JSON.stringify(payload),
         });
 
         if (!res.ok) {
@@ -774,36 +656,36 @@
           throw new Error(err.detail || "Server error");
         }
 
-        // Initialize variables to build the UI
-        const reader = res.body.getReader();
-        const decoder = new TextDecoder();
-        let fullAnswer = "";
-        let buffer = "";
+        // Capture session ID returned by the server
+        const returnedSession = res.headers.get("X-Session-Id");
+        if (returnedSession) saveSession(returnedSession);
 
-        // Prepare the assistant UI bubble immediately
+        // Set up streaming bubble
         loadingEl.innerHTML = `
-  <span class="msg-label">Sacred Texts</span>
-  <div class="msg-bubble" id="currentStreamingMsg">
-    <div class="loading-text">The scriptures are being revealed<span class="thinking-dots"><span></span><span></span><span></span></span></div>
-  </div>
-  <div id="currentStreamingSources"></div>
-`;
-        const bubble = document.getElementById("currentStreamingMsg");
+          <span class="msg-label">Sacred Texts</span>
+          <div class="msg-bubble" id="currentStreamingMsg">
+            <div class="loading-text">The scriptures are being revealed
+              <span class="thinking-dots"><span></span><span></span><span></span></span>
+            </div>
+          </div>
+          <div id="currentStreamingSources"></div>`;
+
+        const bubble           = document.getElementById("currentStreamingMsg");
         const sourcesContainer = document.getElementById("currentStreamingSources");
-        let firstTokenReceived = false;
+        let fullAnswer         = "";
+        let buffer             = "";
+        let firstToken         = false;
+
+        const reader  = res.body.getReader();
+        const decoder = new TextDecoder();
 
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
 
-          // Append new data to the buffer
           buffer += decoder.decode(value, { stream: true });
-
-          // Split by newline
           const lines = buffer.split("\n");
-
-          buffer = lines.pop();
-          
+          buffer = lines.pop();   // keep incomplete line in buffer
 
           for (const line of lines) {
             if (!line.trim()) continue;
@@ -811,20 +693,13 @@
               const parsed = JSON.parse(line);
 
               if (parsed.type === "token") {
-                //Remove the loading text as soon as the first word arrives
-                if (!firstTokenReceived) {
-                  bubble.innerHTML = "";
-                  firstTokenReceived = true;
-                }
-
+                if (!firstToken) { bubble.innerHTML = ""; firstToken = true; }
                 fullAnswer += parsed.data;
-                // Dynamically update the bubble with formatted markdown/paragraphs
                 bubble.innerHTML = formatAnswer(fullAnswer);
                 scrollToBottom();
               }
               else if (parsed.type === "sources") {
-                sourcesData = parsed.data;
-                renderSourcesInPlace(sourcesContainer, sourcesData);
+                renderSourcesInPlace(sourcesContainer, parsed.data);
               }
               else if (parsed.type === "cache") {
                 bubble.innerHTML = formatAnswer(parsed.data.answer);
@@ -832,18 +707,24 @@
                 scrollToBottom();
               }
             } catch (e) {
-              console.error("Stream parsing error", e);
+              console.warn("Stream parse error:", e);
             }
           }
         }
 
-        // Clean up IDs once done so next messages don't conflict
+        // Increment turn counter
+        turnCount++;
+        updateSessionBar();
+
+        // Clean up streaming IDs
         bubble.removeAttribute("id");
         sourcesContainer.removeAttribute("id");
 
       } catch (err) {
-        let msg = err.message;
-        replaceLoadingWithError(loadingEl, msg);
+        loadingEl.innerHTML = `
+          <span class="msg-label">Error</span>
+          <div class="error-bubble">⚠️ ${escapeHtml(err.message)}</div>`;
+        scrollToBottom();
       } finally {
         isLoading = false;
         document.getElementById("sendBtn").disabled = false;
@@ -851,27 +732,9 @@
       }
     }
 
-    // Helper to render sources inside the streaming flow
-    function renderSourcesInPlace(container, sources) {
-      const sourceTags = (sources || []).map(s => {
-        const cls = getSourceClass(s.book);
-        // Use verse citations as the primary text
-        return `<span class="source-tag ${cls}" title="${s.snippet}">📖 ${s.book}</span>`;
-      }).join("");
-
-      if (sourceTags) {
-        container.innerHTML = `
-      <div class="sources">
-        <div class="sources-label">Citations</div>
-        <div class="source-tags">${sourceTags}</div>
-      </div>
-    `;
-      }
-    }
-
     function askSuggested(btn) {
       const input = document.getElementById("questionInput");
-      input.value = btn.textContent;
+      input.value = btn.textContent.trim();
       autoResize(input);
       sendQuestion();
     }
@@ -882,7 +745,9 @@
         sendQuestion();
       }
     }
+
+    // ── Init ───────────────────────────────────────────────────
+    loadSession();
   </script>
 </body>
-
 </html>
